@@ -86,13 +86,10 @@ After training a student, select windows on new raw sequences without running a 
 python scripts/select_student_windows.py --checkpoint work/analysis_outputs/window_distillation/student/EC_level2__student.pt --input inputs/new_sequences.csv --output work/selected_windows.csv
 ```
 
-## Evaluation and checks
+## Evaluation
 
 Training entry points write test predictions, selected settings, thresholds, and metrics. Recalculate a saved test Macro-F1 with:
 
 ```bash
 python scripts/evaluate_predictions.py --predictions work/downstream_results/esm2/EC_level2/full_length_mean/lasso/predictions.npz
-python -m unittest discover -s tests -v
 ```
-
-The unit tests use synthetic data. They check data splitting, threshold/refitting behavior, window coordinates, random residue-count matching, and student inference. They do not rerun the manuscript's PLM encoding or full benchmarks.
