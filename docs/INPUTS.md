@@ -1,6 +1,6 @@
 # Required inputs
 
-The initial repository upload contains scripts only. Supply the following inputs locally before running the corresponding stages.
+Download the two original sequence exports from the [source data release](https://github.com/Rose-Rosie/protein-input-selection/releases/tag/raw-data-2026-09-16) and decompress them before running the corresponding stages. Additional inputs are described below.
 
 ## Raw sequence sources
 
@@ -9,7 +9,7 @@ The initial repository upload contains scripts only. Supply the following inputs
 | Subcellular localization | `uniprotkb_length_100_TO_AND_annotation_2025_08_14.tsv` |
 | EC and GO slim | `uniprotkb_length_1201_TO_AND_reviewed_t_2026_03_31.tsv` |
 
-These filenames identify exports, not official UniProt database release numbers. The exports originate from UniProtKB, https://www.uniprot.org/. They are not downloadable from this repository in the initial code upload.
+These filenames identify exports, not official UniProt database release numbers. The exports originate from [UniProtKB](https://www.uniprot.org/) and are provided as lossless `.tsv.gz` release attachments with SHA-256 checksums and source metadata. All original rows, columns and sequence strings are preserved.
 
 UniRef50 mapping requires a two-column UniProt ID-mapping TSV. GO construction requires the `go-basic.obo` and `goslim_generic.obo` resources corresponding to 2026-01-23. Domain caches are JSON objects mapping each accession to a list of one-based inclusive `[start, end]` pairs. These auxiliary inputs are not bundled. Later database downloads may produce different annotations or sequences.
 

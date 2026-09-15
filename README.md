@@ -6,6 +6,17 @@ The repository covers three multi-label tasks: EC subclass prediction (`EC_level
 
 This repository provides demo workflows and execution instructions.
 
+## Source datasets
+
+The two original UniProtKB exports are available as lossless gzip-compressed TSV files in the [source data release](https://github.com/Rose-Rosie/protein-input-selection/releases/tag/raw-data-2026-09-16).
+
+| Source | Entries | Download |
+| --- | ---: | --- |
+| Subcellular localization source, 14 August 2025 | 344,795 | [TSV.gz (178 MB)](https://github.com/Rose-Rosie/protein-input-selection/releases/download/raw-data-2026-09-16/uniprotkb_length_100_TO_AND_annotation_2025_08_14.tsv.gz) |
+| EC subclass and GO slim source, 31 March 2026 | 12,069 | [TSV.gz (13 MB)](https://github.com/Rose-Rosie/protein-input-selection/releases/download/raw-data-2026-09-16/uniprotkb_length_1201_TO_AND_reviewed_t_2026_03_31.tsv.gz) |
+
+Decompress the files before use. The release includes [SHA-256 checksums](https://github.com/Rose-Rosie/protein-input-selection/releases/download/raw-data-2026-09-16/SHA256SUMS.txt) and [source metadata](https://github.com/Rose-Rosie/protein-input-selection/releases/download/raw-data-2026-09-16/source_datasets.json). Original rows, columns and sequence strings are preserved. See [input requirements](docs/INPUTS.md) for the corresponding workflows.
+
 ## Installation
 
 Use Python 3.10 or 3.11 in a separate environment:
@@ -51,4 +62,4 @@ Teacher and student window-selection commands are described separately in [execu
 
 ## License
 
-Project code is provided under the [MIT License](LICENSE). External protein databases, ontology files, pretrained weights, and software dependencies retain their respective licenses. Raw UniProt exports are not part of this upload.
+Project code is provided under the [MIT License](LICENSE). The source datasets originate from [UniProtKB](https://www.uniprot.org/) and retain the [UniProt data license](https://www.uniprot.org/help/license). Ontology files, pretrained weights, and software dependencies retain their respective licenses.
