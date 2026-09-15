@@ -4,7 +4,7 @@ Code for **Local sequence information and task-dependent fragment selection for 
 
 The repository covers three multi-label tasks: EC subclass prediction (`EC_level2`), GO slim term prediction (`GO_slim`), and subcellular localization (`Subcellular`). It provides data-processing scripts, ESM-2 and ProtT5 encoding, regional pooling, sequence-window selection, and training and evaluation of L1-regularized logistic regression, XGBoost, and a downstream DNN.
 
-This initial upload contains code and documentation. Raw data, prepared datasets, embeddings, trained weights, and prediction results are not included.
+This repository provides demo workflows and execution instructions. Supply the input datasets described in [input requirements](docs/INPUTS.md) to run the workflows. Raw data, prepared datasets, embeddings, trained weights, and prediction results are not bundled.
 
 ## Installation
 
@@ -17,11 +17,11 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-PLM encoding requires a suitable CUDA GPU and downloads pretrained weights from their original providers. Install the PyTorch build appropriate for your CUDA installation. Dependency ranges describe the supported setup; they are not a lock file for the original training environment.
+PLM encoding requires a suitable CUDA GPU and downloads pretrained weights from their original providers. Install the PyTorch build appropriate for your CUDA installation. Package dependencies are listed in `requirements.txt`.
 
-## Code corresponding to the manuscript
+## Repository structure
 
-| Manuscript component | Main scripts |
+| Component | Main scripts |
 | --- | --- |
 | Data preprocessing and splits | `map_uniref50.py`, `prepare_ec_go_labels.py`, `prepare_localization_labels.py`, `collect_available_entries.py`, `prepare_datasets.py` |
 | Full-length residue representations | `embed_full_length_residues_esm2.py`, `embed_full_length_residues_prott5.py` |
@@ -37,11 +37,17 @@ All scripts are under `scripts/`. `lasso` is the retained code identifier for **
 
 See [input requirements](docs/INPUTS.md) and [execution commands](docs/RUNNING.md). Scripts resolve generated files under `work/`; set `PROTEIN_INPUT_WORKDIR` to use another directory.
 
-## Validation protocol and release status
+## Training and evaluation
 
-Runnable downstream entry points implement the unified protocol in the main-methods draft: fit candidates and preprocessing on training data, use validation Macro-F1 to choose hyperparameters, select each label's decision threshold on validation predictions, fix thresholds and DNN epochs, and refit on training plus validation data before test evaluation. The threshold grid is 0.10–0.90 in steps of 0.05, with ties resolved toward the lower threshold.
+The downstream prediction workflows use the following procedure:
 
-The retained regional-pooling scores in the manuscript have not been recomputed using this unified protocol. This code upload is therefore an implementation release, not certification that rerunning it reproduces those scores. Full benchmark reproduction also requires the original prepared inputs and environment. The approximately 1,000-residue ProtT5 implementation preserves the task-specific boundary and token-pooling behavior documented in Supplementary Methods S2.
+1. Reuse the same training, validation, and test splits across input strategies, encoders, and downstream predictors within each task.
+2. Fit candidate predictors and preprocessing parameters on the training set. Select hyperparameters using validation Macro-F1.
+3. Select each label's decision threshold using validation binary F1 over 0.10–0.90 in steps of 0.05. When scores tie, select the lower threshold. Determine the downstream DNN's training epochs through validation-based early stopping during candidate fitting.
+4. Fix the selected hyperparameters, thresholds, and training epochs. Refit preprocessing and the final predictor on the combined training and validation sets; train the downstream DNN for the fixed number of epochs.
+5. Evaluate on the held-out test set using the fixed thresholds and report Macro-F1.
+
+Teacher and student window-selection commands are described separately in [execution commands](docs/RUNNING.md).
 
 ## License
 
