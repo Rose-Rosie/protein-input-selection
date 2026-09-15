@@ -4,7 +4,7 @@ Code for **Local sequence information and task-dependent fragment selection for 
 
 The repository covers three multi-label tasks: EC subclass prediction (`EC_level2`), GO slim term prediction (`GO_slim`), and subcellular localization (`Subcellular`). It provides data-processing scripts, ESM-2 and ProtT5 encoding, regional pooling, sequence-window selection, and training and evaluation of L1-regularized logistic regression, XGBoost, and a downstream DNN.
 
-This repository provides demo workflows and execution instructions. Supply the input datasets described in [input requirements](docs/INPUTS.md) to run the workflows. Raw data, prepared datasets, embeddings, trained weights, and prediction results are not bundled.
+This repository provides demo workflows and execution instructions.
 
 ## Installation
 
