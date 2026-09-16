@@ -40,7 +40,7 @@ python scripts/train_predictors.py --strategies full_length_mean full_domain_poo
 
 These pooling strategies use the same full-length residue matrices. The random control matches the number of domain residues, with seeds 101–105. The downstream command uses the unified validation protocol described in the README.
 
-## Approximately 1,000-residue inputs
+## 1,000-residue inputs
 
 ```bash
 python scripts/encode_positional_inputs.py --model esm2
@@ -48,7 +48,7 @@ python scripts/encode_positional_inputs.py --model prott5
 python scripts/train_predictors.py --strategies full_length_mean head1000 mid1000 tail1000 splice300_400_300 domain_center_longest domain_max_cover
 ```
 
-The six local strategies correspond to Table 2. The ProtT5 utility deliberately retains the `[1:-1]` fragment-pooling operation and the localization-specific longest-domain boundary rule described in Supplementary Methods S2. It must not be interpreted as a standardized all-residue ProtT5 comparison. Full-length and 300-residue encoding retain all residue vectors.
+The six local strategies use 1,000-residue inputs for sequences longer than 1,000 residues. Pooling includes all amino acid residues and excludes special tokens and padding.
 
 ## Supervised 300-residue windows
 

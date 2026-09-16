@@ -8,11 +8,6 @@ STRATEGIES=['head1000','mid1000','tail1000','splice300_400_300','domain_center_l
 
 def select_segments(sequence,domains,strategy,model,task,utils):
     if not strategy.startswith('domain_'):return utils.fixed_slice(sequence,strategy)
-    if model=='prott5' and task=='Subcellular' and strategy=='domain_center_longest':
-        # Supplementary Methods S2: this source pipeline did not back-shift at the C terminus.
-        longest=max(domains,key=lambda x:x[1]-x[0]);center=(longest[0]+longest[1])//2
-        start=max(0,center-500)
-        return [utils.clean_seq(sequence)[start:min(len(sequence),start+1000)]]
     return [utils.select_domain_region(sequence,domains,strategy=strategy)]
 
 def main():
@@ -36,6 +31,9 @@ def main():
             values={}
             for row in frame.itertuples(index=False):
                 segments=select_segments(row.Sequence,domains[row.Entry],strategy,args.model,task,utils)
+                expected_length=min(utils.WINDOW_SIZE,len(utils.clean_seq(row.Sequence)))
+                if any(segment is None or len(segment)!=expected_length for segment in segments):
+                    raise ValueError(f'Input length mismatch: {args.model}/{task}/{strategy}/{row.Entry}')
                 vectors=utils.embed_sequences_chunked(tokenizer,model,device,segments,args.batch_size)
                 values[row.Entry]=np.mean(vectors,axis=0)
             np.savez(out/f'{strategy}.npz',**values)

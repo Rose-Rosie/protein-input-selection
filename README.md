@@ -37,7 +37,7 @@ PLM encoding requires a suitable CUDA GPU and downloads pretrained weights from 
 | Data preprocessing and splits | `map_uniref50.py`, `prepare_ec_go_labels.py`, `prepare_localization_labels.py`, `collect_available_entries.py`, `prepare_datasets.py` |
 | Full-length residue representations | `embed_full_length_residues_esm2.py`, `embed_full_length_residues_prott5.py` |
 | Full-length, domain, and matched-random pooling | `pool_full_length_mean.py`, `pool_full_length_domain.py`, `pool_domain_random.py` |
-| Approximately 1,000-residue positional and domain inputs | `encode_positional_inputs.py` and its two encoder utility modules |
+| 1,000-residue positional and domain inputs | `encode_positional_inputs.py` and its two encoder utility modules |
 | Supervised 300-residue selection | `build_signal_fragment_coordinates.py`, `encode_signal_fragments.py` |
 | Teacher distributions and student selection | `build_crossfit_window_teacher.py`, `train_window_student.py`, `select_student_windows.py`, `encode_window_distillation_esm2.py` |
 | EC N-terminal 500-residue control | `build_ec_head500_manifest.py` |

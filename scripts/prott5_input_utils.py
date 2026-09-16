@@ -33,14 +33,22 @@ def to_spaced(seq: str) -> str:
 def embed_sequences_chunked(tokenizer, model, device, seqs: list[str], segment_batch_size: int) -> list[np.ndarray]:
     results = []
     for start in range(0, len(seqs), segment_batch_size):
-        sub_seqs = [to_spaced(clean_seq(s)) for s in seqs[start:start + segment_batch_size]]
-        ids = tokenizer(sub_seqs, return_tensors='pt', padding=True, add_special_tokens=True).to(device)
+        cleaned_seqs = [clean_seq(s) for s in seqs[start:start + segment_batch_size]]
+        sub_seqs = [to_spaced(s) for s in cleaned_seqs]
+        ids = tokenizer(sub_seqs, return_tensors='pt', padding=True, add_special_tokens=True,
+                        return_special_tokens_mask=True).to(device)
+        special_tokens_mask = ids.pop('special_tokens_mask').bool()
         with torch.no_grad():
             out = model(**ids).last_hidden_state
         for idx in range(len(sub_seqs)):
-            mask = ids.attention_mask[idx].bool()
-            valid = out[idx][mask][1:-1]
-            results.append(valid.mean(dim=0).detach().cpu().numpy())
+            mask = ids.attention_mask[idx].bool() & ~special_tokens_mask[idx]
+            residues = out[idx][mask]
+            if residues.shape[0] != len(cleaned_seqs[idx]):
+                raise ValueError(
+                    f'ProtT5 residue count mismatch: residues={residues.shape[0]} '
+                    f'length={len(cleaned_seqs[idx])}'
+                )
+            results.append(residues.float().mean(dim=0).detach().cpu().numpy())
     return results
 
 def fixed_slice(seq: str, strategy: str) -> list[str]:
